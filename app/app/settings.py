@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from oscar import OSCAR_MAIN_TEMPLATE_DIR, get_core_apps
+from oscar.defaults import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,10 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9j^813vm+4h_x%=qj*)e4n0j70(qga@br(kq_kr#8(991!r4&4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False if os.environ.get("DEBUG", False) == "False" else True
 PROD = not DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -36,12 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.flatpages',
     'celery',  # Don't forget to add celery
     'django_celery_results',  # celery result
     'django_celery_beat',
-]
+    'widget_tweaks',
+] + get_core_apps() # oscar
+
+SITE_ID = 1
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,14 +59,25 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # oscar
+    'oscar.apps.basket.middleware.BasketMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'oscar.apps.customer.auth_backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            OSCAR_MAIN_TEMPLATE_DIR
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +85,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # oscar
+                'oscar.apps.search.context_processors.search_form',
+                'oscar.apps.promotions.context_processors.promotions',
+                'oscar.apps.checkout.context_processors.checkout',
+                'oscar.apps.customer.notifications.context_processors.notifications',
+                'oscar.core.context_processors.metadata',
             ],
         },
     },
@@ -80,11 +105,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'NAME': os.environ.get('POSTGRES_DB', "db_name"),
+        'USER': os.environ.get('POSTGRES_USER', "db_user"),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', "6NwpPtvGyCsMLAKDZtazEP9WjANze25eP3e2UJdWrgrrKq"),
+        'HOST': os.environ.get('POSTGRES_HOST', "localhost"),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
     }
 }
 
@@ -130,3 +155,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+# Oscar spesific settings
+# http://docs.oscarcommerce.com/en/latest/internals/getting_started.html
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+    },
+}
