@@ -1,0 +1,83 @@
+version: '3'
+
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: "always"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./_nginx/vhost/:/etc/nginx/vhost.d:ro
+      - ./_nginx/conf.d/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
+      - ./app/static:/app/static
+      - ./app/media:/app/media
+
+
+  postgres:
+    container_name:  postgres-db
+    image:           postgres:9.6
+    ports:
+      - 5432:5432 # Bind host port 5432 to PostgreSQL port 5432
+    volumes:
+      - ./postgredb:/var/lib/postgresql/data
+    env_file: .env
+    environment:
+      - LC_ALL=C.UTF-8
+
+  web:
+    container_name: ecom
+    build: .
+    restart: "always"
+    env_file: .env
+    environment:
+      - HTTP_PORT=8000
+      - STATS_PORT=8001
+      - DEBUG=True
+      - LANG=C.UTF-8
+      - LANG en_US.UTF-8
+      - LANGUAGE en_US:en
+      - LC_ALL en_US.UTF-8
+    volumes:
+      - ./app:/code
+      - ./uwsgi.ini:/conf/uwsgi.ini
+    ports:
+      - "8015:8000"
+    links:
+      - postgres
+    depends_on:
+      - "postgres"
+
+  # redis:
+  #   image: redis:latest
+  #   restart: "on-failure"
+  #   container_name: redis
+  #   ports:
+  #    - 6379:6379
+  #   volumes:
+  #     - ./redisdb:/var/lib/redis
+
+  # celery:
+  #   restart: "always"
+  #   build:
+  #     context: .
+  #     dockerfile: celery.dockerfile
+  #   container_name: celery
+  #   env_file: .env
+  #   command: celery --app=burn.celery:app worker -B --loglevel=INFO
+  #   volumes:
+  #     - .:/src
+  #   links:
+  #     - redis
+  #     - postgres
+  #   depends_on:
+  #     - "redis"
+  #     - "postgres"
+
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
