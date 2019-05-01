@@ -35,7 +35,7 @@ services:
     environment:
       - HTTP_PORT=8000
       - STATS_PORT=8001
-      - DEBUG=True
+      - DEBUG=False
       - LANG=C.UTF-8
       - LANG en_US.UTF-8
       - LANGUAGE en_US:en
@@ -50,31 +50,33 @@ services:
     depends_on:
       - "postgres"
 
-  # redis:
-  #   image: redis:latest
-  #   restart: "on-failure"
-  #   container_name: redis
-  #   ports:
-  #    - 6379:6379
-  #   volumes:
-  #     - ./redisdb:/var/lib/redis
+  redis:
+    image: redis:5
+    restart: "always"
+    container_name: redis
+    command: redis-server --requirepass $REDIS_PASSWORD
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redisdb:/var/lib/redis
+    env_file: .env
 
-  # celery:
-  #   restart: "always"
-  #   build:
-  #     context: .
-  #     dockerfile: celery.dockerfile
-  #   container_name: celery
-  #   env_file: .env
-  #   command: celery --app=burn.celery:app worker -B --loglevel=INFO
-  #   volumes:
-  #     - .:/src
-  #   links:
-  #     - redis
-  #     - postgres
-  #   depends_on:
-  #     - "redis"
-  #     - "postgres"
+  celery:
+    # restart: "always"
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    container_name: celery
+    env_file: .env
+    command: /venv/bin/celery --app=app.celery:app worker -B --loglevel=INFO
+    volumes:
+      - ./app:/code
+    links:
+      - redis
+      - postgres
+    depends_on:
+      - "redis"
+      - "postgres"
 
 
 networks:
