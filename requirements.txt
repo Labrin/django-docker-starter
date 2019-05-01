@@ -21,6 +21,7 @@ pbr==5.2.0
 phonenumbers==8.10.10
 Pillow==6.0.0
 psycopg2==2.7.4
+psycopg2-binary==2.8.2
 purl==1.5
 pycountry==18.12.8
 python-crontab==2.3.6
