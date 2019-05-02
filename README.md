@@ -20,7 +20,7 @@ $ git clone https://github.com/msadig/django-docker-starter.git
 
 Repo includes demo `app`, but you can create new app just by:
 ```bash
-$ bash starter.sh create_django <appName>
+$ bash starter.sh django-app <appName>
 ```
 
 Setup development environment:

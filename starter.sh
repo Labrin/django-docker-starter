@@ -18,7 +18,8 @@ function usage
   echo -e "Usage: $0 COMMAND"
   echo -e "\nCommands:"
 
-  echo -e "\t setup		\tFor setting up development environment"
+  echo -e "\t setup		                <- For setting up development environment"
+  echo -e "\t django-app <appName>		<- Creates Django app with given name"
 
   echo -en "\nPlease see the README file for more info.\n\n"
   exit 1
@@ -64,8 +65,8 @@ function create_django() {
 # Setup development database
 function rename_django() {
   APP_NAME=${2:-$(echo "app")}
-  sed -i 's|app|'$APP_NAME'|g' ${CURRENT_PATH}/docker-compose.yml
-  sed -i 's|/app|/'$APP_NAME'|g' ${CURRENT_PATH}/Dockerfile
+  sed -i 's|app|'${APP_NAME}'|g' ${CURRENT_PATH}/docker-compose.yml
+  sed -i 's|/app|/'${APP_NAME}'|g' ${CURRENT_PATH}/Dockerfile
 }
 
 
