@@ -66,7 +66,7 @@ function create_django() {
 function rename_django() {
   APP_NAME=${2:-$(echo "app")}
   sed -i 's|app|'${APP_NAME}'|g' ${CURRENT_PATH}/docker-compose.yml
-  sed -i 's|/app|/'${APP_NAME}'|g' ${CURRENT_PATH}/Dockerfile
+  # sed -i 's|app|'${APP_NAME}'|g' ${CURRENT_PATH}/Dockerfile
 }
 
 
