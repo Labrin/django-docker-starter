@@ -12,8 +12,8 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./_nginx/vhost/:/etc/nginx/vhost.d:ro
       - ./_nginx/conf.d/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
-      - ./app/static:/app/static
-      - ./app/media:/app/media
+      - ./app/static:/web/static
+      - ./app/media:/web/media
 
 
   postgres:
@@ -28,7 +28,7 @@ services:
       - LC_ALL=C.UTF-8
 
   web:
-    container_name: ecom
+    container_name: app
     build: .
     restart: "always"
     env_file: .env
@@ -50,31 +50,6 @@ services:
     depends_on:
       - "postgres"
 
-  # redis:
-  #   image: redis:latest
-  #   restart: "on-failure"
-  #   container_name: redis
-  #   ports:
-  #    - 6379:6379
-  #   volumes:
-  #     - ./redisdb:/var/lib/redis
-
-  # celery:
-  #   restart: "always"
-  #   build:
-  #     context: .
-  #     dockerfile: celery.dockerfile
-  #   container_name: celery
-  #   env_file: .env
-  #   command: celery --app=burn.celery:app worker -B --loglevel=INFO
-  #   volumes:
-  #     - .:/src
-  #   links:
-  #     - redis
-  #     - postgres
-  #   depends_on:
-  #     - "redis"
-  #     - "postgres"
 
 
 networks:

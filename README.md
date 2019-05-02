@@ -18,23 +18,33 @@ Download the repository:
 $ git clone https://github.com/msadig/django-docker-starter.git
 ```
 
-Setup development database:
-```
-$ cd _development && docker-compose up -d && cd ../
+Repo includes demo `app`, but you can create new app just by:
+```bash
+$ bash starter.sh create_django <appName>
 ```
 
+Setup development environment:
+```bash
+$ bash starter.sh setup
 
-Initialize development environment:
-```
-$ python3 -m venv .venv
+# activate virtual environment
 $ source .venv/bin/activate
-
-(.venv)$ pip install -U pip
-(.venv)$ pip install -r requirements.txt
 (.venv)$ cd /app
 (.venv)$ python manage.py runserver 8080
 ```
-*Now your django app is available on http://localhost:8080, but it's optional for development*
+*Now your django app is available on http://localhost:8080*
+
+Initialize development environment:
+```bash
+$ bash starter.sh setup
+
+# activate virtual environment
+$ source .venv/bin/activate
+(.venv)$ cd /app
+(.venv)$ python manage.py runserver 8080
+```
+*Now your django app is available on http://localhost:8080*
+
 
 ## Container commands
 
