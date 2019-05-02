@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9j^813vm+4h_x%=qj*)e4n0j70(qga@br(kq_kr#8(991!r4&4'
+SECRET_KEY = '6w5!q4)j3&84#0tsmx!4a$sdno^t!zb$j*a-a=4$os_2_qf7#b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'NAME': os.environ.get('POSTGRES_DB', "db_name"),
+        'USER': os.environ.get('POSTGRES_USER', "db_user"),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', "6NwpPtvGyCsMLAKDZtazEP9WjANze25eP3e2UJdWrgrrKq"),
+        'HOST': os.environ.get('POSTGRES_HOST', "localhost"),
+        'PORT': os.environ.get('POSTGRES_PORT', 5432),
     }
 }
 
@@ -122,6 +122,7 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -129,4 +130,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

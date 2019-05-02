@@ -17,9 +17,17 @@ def debug_task(self):
 
 
 app.conf.update(
-    BROKER_URL='redis://:{password}@redis:6379/0'.format(password=os.environ.get('REDIS_PASSWORD')),
+    BROKER_URL='redis://:{password}@{host}:{port}/0'.format(
+        password=os.environ.get('REDIS_PASSWORD', "dKqs72RhtaPPYyfN"),
+        host=os.environ.get('REDIS_HOST', "localhost"),
+        port=os.environ.get('REDIS_PORT', "6379"),
+    ),
     CELERYBEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler',
-    CELERY_RESULT_BACKEND='redis://:{password}@redis:6379/1'.format(password=os.environ.get('REDIS_PASSWORD')),
+    CELERY_RESULT_BACKEND='redis://:{password}@{host}:{port}/1'.format(
+        password=os.environ.get('REDIS_PASSWORD', "dKqs72RhtaPPYyfN"),
+        host=os.environ.get('REDIS_HOST', "localhost"),
+        port=os.environ.get('REDIS_PORT', "6379"),
+    ),
     CELERY_DISABLE_RATE_LIMITS=True,
     CELERY_ACCEPT_CONTENT=['json', ],
     CELERY_TASK_SERIALIZER='json',
