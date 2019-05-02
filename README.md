@@ -169,6 +169,7 @@ $ docker-compose run web python manage.py createsuperuser
 To use ready to use `celery` integration:
 ```bash
 $ git checkout celery && git fetch && git pull
+$ docker-compose run celery python manage.py migrate
 ```
 
 ## Oscar
@@ -176,6 +177,7 @@ $ git checkout celery && git fetch && git pull
 To use ready to use `oscar` integration:
 ```bash
 $ git checkout django-oscar && git fetch && git pull
+$ docker-compose run web python manage.py migrate
 ```
 
 
