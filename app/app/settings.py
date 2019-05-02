@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9j^813vm+4h_x%=qj*)e4n0j70(qga@br(kq_kr#8(991!r4&4'
+SECRET_KEY = '6w5!q4)j3&84#0tsmx!4a$sdno^t!zb$j*a-a=4$os_2_qf7#b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if os.environ.get("DEBUG", False) == "False" else True
@@ -147,6 +147,7 @@ USE_L10N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -164,4 +165,14 @@ HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
+}
+
+OSCAR_SHOP_NAME = 'E-commerce'
+OSCAR_DEFAULT_CURRENCY = 'USD'
+OSCAR_INITIAL_ORDER_STATUS = 'Pending'
+OSCAR_INITIAL_LINE_STATUS = 'Pending'
+OSCAR_ORDER_STATUS_PIPELINE = {
+    'Pending': ('Being processed', 'Cancelled',),
+    'Being processed': ('Processed', 'Cancelled',),
+    'Cancelled': (),
 }
